@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">鸡蛋有子</string>
+    <string name="text_search_tip">搜索内容</string>
+    <string name="text_nothing">暂无内容</string>
+    <string name="text_add">添加</string>
+</resources>

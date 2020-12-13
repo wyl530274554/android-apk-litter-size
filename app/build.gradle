@@ -1,0 +1,46 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.melon.miniapk"
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 10006
+        versionName "1.0.6"
+
+    }
+    signingConfigs {
+        common {
+            keyAlias 'melon'
+            keyPassword '123456'
+            storeFile file('myapp.jks')
+            storePassword '123456'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.common
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    //包名
+    applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                outputFileName = "melon_" + defaultConfig.versionName + "_" + defaultConfig.versionCode + ".apk"
+            }
+    }
+}
+
+dependencies {
+}
