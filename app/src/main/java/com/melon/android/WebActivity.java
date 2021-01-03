@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
+import com.melon.android.tool.SystemUtil;
+import com.melon.android.tool.ToastUtil;
+
 public class WebActivity extends Activity {
 
     private MelonWebView mWebView;

@@ -3,4 +3,6 @@
     <string name="text_search_tip">搜索内容</string>
     <string name="text_nothing">暂无内容</string>
     <string name="text_add">添加</string>
+    <string name="text_http">网址</string>
+    <string name="text_no_image">无图</string>
 </resources>

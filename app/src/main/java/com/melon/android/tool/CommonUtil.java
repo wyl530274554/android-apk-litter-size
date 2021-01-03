@@ -26,6 +26,8 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,16 +42,28 @@ public class CommonUtil {
      * @param clazz 要跳转页面
      */
     public static void enterActivity(Context ctx, Class<?> clazz) {
-        enterActivity(ctx, clazz, null, null);
+        enterActivity(ctx, clazz, null);
     }
 
     public static void enterActivity(Context ctx, Class<?> clazz, String key, String value) {
+        Map<String, String> map = new HashMap<>();
+        map.put(key, value);
+        enterActivity(ctx, clazz, map);
+    }
+
+    public static void enterActivity(Context ctx, Class<?> clazz, Map<String, String> params) {
         Intent intent = new Intent(ctx, clazz);
         if (ctx instanceof Application) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-        if (key != null && value != null) {
-            intent.putExtra(key, value);
+        if (params != null && params.size() > 0) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                if (key != null && value != null) {
+                    intent.putExtra(key, value);
+                }
+            }
         }
         ctx.startActivity(intent);
     }
@@ -75,6 +89,9 @@ public class CommonUtil {
     public static void enterBrowser(Context ctx, String url) {
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
+        if (ctx instanceof Application) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
         Uri uri = Uri.parse(url);
         intent.setData(uri);
         ctx.startActivity(intent);

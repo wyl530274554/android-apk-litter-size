@@ -8,10 +8,10 @@ android {
 
     defaultConfig {
         applicationId "com.melon.miniapk"
-        minSdkVersion 16
+        minSdkVersion 20
         targetSdkVersion 30
-        versionCode 10006
-        versionName "1.0.6"
+        versionCode 10015 //主版本号+次版本号+修正号，二位一表示
+        versionName "1.0.15"
 
     }
     signingConfigs {

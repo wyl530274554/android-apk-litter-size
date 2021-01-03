@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.melon.android.R;
 import com.melon.android.bean.Password;
@@ -299,27 +298,6 @@ public class PasswordFragment extends Fragment implements AdapterView.OnItemClic
                 showToast("uploadPassword error: " + e.getMessage());
             }
         });
-
-//        String body = new Gson().toJson(password);
-//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), body);
-//        OkHttpUtils.patch().url(ApiUtil.API_PASSWORD).requestBody(requestBody).build().execute(new StringCallback() {
-//            @Override
-//            public void onError(Call call, Exception e, int id) {
-//                LogUtil.d("net error: " + e.getCause());
-//                ToastUtil.toast(getContext(), e.getMessage());
-//            }
-//
-//            @Override
-//            public void onResponse(String response, int id) {
-//                if ("1".equalsIgnoreCase(response)) {
-//                    ToastUtil.toast(getContext(), "修改成功");
-//                    mDialog.dismiss();
-//                } else {
-//                    ToastUtil.toast(getContext(), "修改失败: " + response);
-//                }
-//            }
-//        });
-
     }
 
     @Override
@@ -328,7 +306,7 @@ public class PasswordFragment extends Fragment implements AdapterView.OnItemClic
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             //点击搜索要做的操作
             String trim = textView.getText().toString().trim();
-            getServerNotes(trim);
+            getPassword(trim);
             LogUtil.d("getServerNotes:" + trim);
         }
         return false;
@@ -409,7 +387,7 @@ public class PasswordFragment extends Fragment implements AdapterView.OnItemClic
 
     }
 
-    private void getServerNotes(String content) {
+    private void getPassword(String content) {
         HttpUtil.doGet(getContext(), ApiUtil.API_PASSWORD + content, new HttpUtil.HttpCallbackStringListener() {
             @Override
             public void onFinish(String response) {

@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -19,13 +21,18 @@ import com.melon.android.tool.CommonUtil;
 import com.melon.android.tool.Constant;
 import com.melon.android.tool.HttpUtil;
 import com.melon.android.tool.LogUtil;
+import com.melon.android.tool.MelonConfig;
+import com.melon.android.tool.SystemUtil;
 
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.melon.android.tool.ApiUtil.API_APP_UPGRADE;
 import static com.melon.android.tool.ApiUtil.APP_DOWNLOAD;
 
-public class MainActivity extends Activity implements TextView.OnEditorActionListener, AdapterView.OnItemClickListener {
+public class MainActivity extends Activity implements TextView.OnEditorActionListener, AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener {
 
     private final String[] mTitles = {"密码"};
     private static final int ITEM_PASSWORD = 0;
@@ -38,6 +45,12 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
         EditText editText = findViewById(R.id.et_main_search);
         editText.setOnEditorActionListener(this);
 
+        CheckBox httpBox = findViewById(R.id.cb_main_http);
+        CheckBox imageBox = findViewById(R.id.cb_main_image);
+        httpBox.setOnCheckedChangeListener(this);
+        imageBox.setOnCheckedChangeListener(this);
+
+
         GridView gridView = findViewById(R.id.gv_main);
         gridView.setAdapter(new MainAdapter());
         gridView.setOnItemClickListener(this);
@@ -46,8 +59,6 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
     }
 
     private void getAppUpgradeInfo() {
-        LogUtil.d("getAppUpgradeInfo");
-
         HttpUtil.doGet(this, API_APP_UPGRADE, new HttpUtil.HttpCallbackStringListener() {
             @Override
             public void onFinish(String response) {
@@ -77,14 +88,36 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
     public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             String content = textView.getText().toString().trim();
-            String url = Constant.URL_BAI_DU + content;
-            if (content.startsWith("http")) {
-                url = content;
+            if (!content.isEmpty()) {
+                enterSearch(content);
             }
-            CommonUtil.enterActivity(this, WebActivity.class, "url", url);
             return true;
         }
         return false;
+    }
+
+    private void enterSearch(String content) {
+        String url;
+        if (content.startsWith("http")) {
+            url = content;
+        } else {
+            if (isHttp) {
+                if (content.contains(".")) {
+                    url = "http://" + content;
+                } else {
+                    url = "http://" + content + ".com";
+                }
+            } else {
+                url = Constant.URL_BAI_DU + content;
+            }
+        }
+
+        //若当前不是wifi网络，则直接使用系统默认浏览器
+        if (SystemUtil.isWifiConnected(getApplicationContext())) {
+            CommonUtil.enterActivity(this, WebActivity.class, "url", url);
+        } else {
+            CommonUtil.enterBrowser(this, url);
+        }
     }
 
     @Override
@@ -93,6 +126,21 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
             case ITEM_PASSWORD:
                 //查询密码
                 CommonUtil.enterFragment(this, CommonFragmentActivity.FRAGMENT_PASSWORD);
+                break;
+            default:
+        }
+    }
+
+    boolean isHttp;
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.cb_main_http:
+                isHttp = isChecked;
+                break;
+            case R.id.cb_main_image:
+                MelonConfig.isWebNoImage = isChecked;
                 break;
             default:
         }
@@ -121,7 +169,6 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             TextView tv = new TextView(viewGroup.getContext());
-            tv.setTextColor(Color.WHITE);
             tv.setTextSize(20);
             tv.setHeight(150);
             tv.setTypeface(Typeface.DEFAULT_BOLD);

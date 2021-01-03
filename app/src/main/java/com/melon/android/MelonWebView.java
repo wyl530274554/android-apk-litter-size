@@ -23,6 +23,10 @@ import com.melon.android.tool.CommonUtil;
 import com.melon.android.tool.Constant;
 import com.melon.android.tool.DialogUtil;
 import com.melon.android.tool.LogUtil;
+import com.melon.android.tool.MelonConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * WebView封装
@@ -61,15 +65,8 @@ public class MelonWebView extends WebView implements View.OnLongClickListener {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
 
-//        boolean isWebNoImgOpen = SpUtil.getBoolean(getContext(), "isSmartWebNoImgOpen");
-//        //智能图片加载 只在wifi下显示
-//        if (isWebNoImgOpen) {
-//            settings.setBlockNetworkImage(true);
-//        } else {
-//            settings.setBlockNetworkImage(false);
-//        }
-        //不加载图片
-        settings.setBlockNetworkImage(true);
+        //图片
+        settings.setBlockNetworkImage(MelonConfig.isWebNoImage);
 
         //支持下载
         setDownloadListener(new DownloadListener() {

@@ -8,10 +8,29 @@
         android:id="@+id/et_main_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
         android:hint="@string/text_search_tip"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:singleLine="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/cb_main_http"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_http" />
+
+        <CheckBox
+            android:id="@+id/cb_main_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_no_image" />
+    </LinearLayout>
 
     <GridView
         android:id="@+id/gv_main"
