@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,17 +37,19 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
 
     private final String[] mTitles = {"密码"};
     private static final int ITEM_PASSWORD = 0;
+    private EditText editText;
+    private CheckBox imageBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        EditText editText = findViewById(R.id.et_main_search);
+        editText = findViewById(R.id.et_main_search);
         editText.setOnEditorActionListener(this);
 
         CheckBox httpBox = findViewById(R.id.cb_main_http);
-        CheckBox imageBox = findViewById(R.id.cb_main_image);
+        imageBox = findViewById(R.id.cb_main_image);
         httpBox.setOnCheckedChangeListener(this);
         imageBox.setOnCheckedChangeListener(this);
 
@@ -118,6 +121,32 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
         } else {
             CommonUtil.enterBrowser(this, url);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //无图
+        imageBox.setChecked(MelonConfig.isWebNoImage);
+
+        // 全选
+        editText.setText(editText.getText().toString());// 添加这句后实现效果
+        editText.selectAll();
+
+        //延时弹出键盘
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                CommonUtil.hideInputMode(MainActivity.this, false);
+            }
+        }, 500);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //隐藏键盘
+        CommonUtil.hideInputMode(MainActivity.this, true);
     }
 
     @Override

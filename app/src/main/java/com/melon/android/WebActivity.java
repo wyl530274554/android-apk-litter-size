@@ -3,6 +3,7 @@ package com.melon.android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 
 import com.melon.android.tool.SystemUtil;
 import com.melon.android.tool.ToastUtil;
@@ -16,6 +17,14 @@ public class WebActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
         mWebView = findViewById(R.id.wv_web);
+
+        //关闭页面
+        findViewById(R.id.tv_web_close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         String mUrl = getIntent().getStringExtra("url");
         mWebView.loadUrl(mUrl);
