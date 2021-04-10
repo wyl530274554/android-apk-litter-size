@@ -4,12 +4,14 @@
     package="com.melon.android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".MelonApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyTheme"
@@ -23,7 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WebActivity" />
+        <activity
+            android:name=".WebActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".CommonFragmentActivity" />
     </application>
 </manifest>

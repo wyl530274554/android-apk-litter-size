@@ -24,6 +24,7 @@ import com.melon.android.tool.HttpUtil;
 import com.melon.android.tool.LogUtil;
 import com.melon.android.tool.MelonConfig;
 import com.melon.android.tool.SystemUtil;
+import com.melon.android.tool.ToastUtil;
 
 import org.json.JSONObject;
 
@@ -38,7 +39,7 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
     private final String[] mTitles = {"密码"};
     private static final int ITEM_PASSWORD = 0;
     private EditText editText;
-    private CheckBox imageBox;
+    private CheckBox cb_main_explorer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +50,11 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
         editText.setOnEditorActionListener(this);
 
         CheckBox httpBox = findViewById(R.id.cb_main_http);
-        imageBox = findViewById(R.id.cb_main_image);
+        CheckBox imageBox = findViewById(R.id.cb_main_image);
+        cb_main_explorer = findViewById(R.id.cb_main_explorer);
         httpBox.setOnCheckedChangeListener(this);
         imageBox.setOnCheckedChangeListener(this);
+        cb_main_explorer.setOnCheckedChangeListener(this);
 
 
         GridView gridView = findViewById(R.id.gv_main);
@@ -115,11 +118,10 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
             }
         }
 
-        //若当前不是wifi网络，则直接使用系统默认浏览器
-        if (SystemUtil.isWifiConnected(getApplicationContext())) {
-            CommonUtil.enterActivity(this, WebActivity.class, "url", url);
-        } else {
+        if (MelonConfig.isOpenInExplorer) {
             CommonUtil.enterBrowser(this, url);
+        } else {
+            CommonUtil.enterActivity(this, WebActivity.class, "url", url);
         }
     }
 
@@ -127,7 +129,8 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
     protected void onResume() {
         super.onResume();
         //无图
-        imageBox.setChecked(MelonConfig.isWebNoImage);
+        //imageBox.setChecked(MelonConfig.isWebNoImage);
+        cb_main_explorer.setChecked(MelonConfig.isOpenInExplorer);
 
         // 全选
         editText.setText(editText.getText().toString());// 添加这句后实现效果
@@ -170,6 +173,9 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
                 break;
             case R.id.cb_main_image:
                 MelonConfig.isWebNoImage = isChecked;
+                break;
+            case R.id.cb_main_explorer:
+                MelonConfig.isOpenInExplorer = isChecked;
                 break;
             default:
         }

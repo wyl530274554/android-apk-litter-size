@@ -6,27 +6,27 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
 
 import com.melon.android.tool.CommonUtil;
 import com.melon.android.tool.Constant;
 import com.melon.android.tool.DialogUtil;
 import com.melon.android.tool.LogUtil;
 import com.melon.android.tool.MelonConfig;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * WebView封装
@@ -58,7 +58,7 @@ public class MelonWebView extends WebView implements View.OnLongClickListener {
         setWebChromeClient(new MelonWebChromeClient());
         WebSettings settings = getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setUseWideViewPort(true); // 关键点
+        settings.setUseWideViewPort(true);
         settings.setDomStorageEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // Https嵌套http图片问题
@@ -166,9 +166,37 @@ public class MelonWebView extends WebView implements View.OnLongClickListener {
         return url;
     }
 
+    private class MelonWebChromeClient extends WebChromeClient {
+        private View videoView;
+        private CustomViewCallback mCustomViewCallback;
 
-    private static class MelonWebChromeClient extends WebChromeClient {
+        @Override
+        public void onShowCustomView(View view, CustomViewCallback callback) {
+            if (videoView != null) {
+                callback.onCustomViewHidden();
+                return;
+            }
+            videoView = view;
 
+            ((ViewGroup) getParent()).addView(videoView);
+            mCustomViewCallback = callback;
+            setVisibility(View.GONE);
+            ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+
+        @Override
+        public void onHideCustomView() {
+            setVisibility(View.VISIBLE);
+            if (videoView == null) {
+                return;
+            }
+            videoView.setVisibility(View.GONE);
+            ((ViewGroup) getParent()).removeView(videoView);
+            mCustomViewCallback.onCustomViewHidden();
+            videoView = null;
+            ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            super.onHideCustomView();
+        }
     }
 
     /**
