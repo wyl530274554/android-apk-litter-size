@@ -10,8 +10,8 @@ android {
         applicationId "com.melon.miniapk"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 10023 //主版本号+次版本号+修正号，二位一表示
-        versionName "1.0.23"
+        versionCode 10024 //主版本号+次版本号+修正号，二位一表示
+        versionName "1.0.24"
 
     }
     signingConfigs {
@@ -43,4 +43,5 @@ android {
 }
 
 dependencies {
+implementation 'org.jetbrains:annotations:15.0'
 }
