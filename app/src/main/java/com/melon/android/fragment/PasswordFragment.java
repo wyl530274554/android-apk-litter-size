@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.melon.android.MainActivity;
 import com.melon.android.R;
 import com.melon.android.bean.Password;
 import com.melon.android.tool.ApiUtil;
@@ -214,6 +215,25 @@ public class PasswordFragment extends Fragment implements AdapterView.OnItemClic
         return true;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //延时弹出键盘
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                CommonUtil.hideInputMode(getActivity(), false);
+            }
+        }, 500);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //隐藏键盘
+        CommonUtil.hideInputMode(getActivity(), true);
+    }
+
     @TargetApi(Build.VERSION_CODES.M)
     public void updatePassword(final Password password) {
         //显示修改对话框
@@ -276,7 +296,7 @@ public class PasswordFragment extends Fragment implements AdapterView.OnItemClic
         map.put("username", password.username);
         map.put("remark", password.remark);
 
-        HttpUtil.doPost(getContext(), ApiUtil.API_PASSWORD+"update", map, new HttpUtil.HttpCallbackStringListener() {
+        HttpUtil.doPost(getContext(), ApiUtil.API_PASSWORD + "update", map, new HttpUtil.HttpCallbackStringListener() {
             @Override
             public void onFinish(String response) {
                 if ("1".equalsIgnoreCase(response)) {

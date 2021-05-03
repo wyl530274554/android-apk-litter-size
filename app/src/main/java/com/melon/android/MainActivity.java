@@ -36,8 +36,11 @@ import static com.melon.android.tool.ApiUtil.APP_DOWNLOAD;
 
 public class MainActivity extends Activity implements TextView.OnEditorActionListener, AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private final String[] mTitles = {"密码"};
+    private final String[] mTitles = {"密码", "天气", "上海南站", "车墩站"};
     private static final int ITEM_PASSWORD = 0;
+    private static final int ITEM_WEATHER = 1;
+    private static final int ITEM_SHNZ = 2; //金山铁路-上海南站
+    private static final int ITEM_CHEDUN = 3; //金山铁路-车墩站
     private EditText editText;
     private CheckBox cb_main_explorer;
 
@@ -130,7 +133,6 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
         super.onResume();
         //无图
         //imageBox.setChecked(MelonConfig.isWebNoImage);
-        cb_main_explorer.setChecked(MelonConfig.isOpenInExplorer);
 
         // 全选
         editText.setText(editText.getText().toString());// 添加这句后实现效果
@@ -159,6 +161,18 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
                 //查询密码
                 CommonUtil.enterFragment(this, CommonFragmentActivity.FRAGMENT_PASSWORD);
                 break;
+            case ITEM_WEATHER:
+                //查询天气
+                CommonUtil.enterBrowser(this, Constant.URL_BAI_DU + "天气预报");
+                break;
+            case ITEM_SHNZ:
+                //查询金山铁路-上海南站
+                CommonUtil.enterBrowser(this, "http://www.shjstl.com/lately.php?station=%E4%B8%8A%E6%B5%B7%E5%8D%97%E7%AB%99");
+                break;
+            case ITEM_CHEDUN:
+                //查询金山铁路-车墩站
+                CommonUtil.enterBrowser(this, "http://www.shjstl.com/lately.php?station=%E8%BD%A6%E5%A2%A9");
+                break;
             default:
         }
     }
@@ -175,7 +189,7 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
                 MelonConfig.isWebNoImage = isChecked;
                 break;
             case R.id.cb_main_explorer:
-                MelonConfig.isOpenInExplorer = isChecked;
+                MelonConfig.isOpenInExplorer = !isChecked;
                 break;
             default:
         }
