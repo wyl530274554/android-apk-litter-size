@@ -1,6 +1,9 @@
 package com.melon.android.tool;
 
+import android.text.TextUtils;
+
 import com.melon.android.BuildConfig;
+import com.melon.android.MelonApplication;
 
 /**
  * 接口地址管理
@@ -10,7 +13,7 @@ import com.melon.android.BuildConfig;
  */
 public class ApiUtil {
     private static final String API_PROTOCOL = "http://";
-    private static final String API_IP = "192.168.100.234";
+    public static final String API_IP = "192.168.100.234";
     private static final String API_PORT = "80";
     private static final String API_BASE = getApiBase() + "/";
 
@@ -30,10 +33,14 @@ public class ApiUtil {
     public static final String APP_DOWNLOAD = API_BASE + "file/";
 
     private static String getApiBase() {
-        if (BuildConfig.DEBUG) {
+        String server = SpUtil.getString(CommonUtil.getAppContext(), "myServer");
+        LogUtil.d("server:" + server);
+        if (TextUtils.isEmpty(server)) {
+            LogUtil.d("server is empty");
             return API_PROTOCOL + API_IP + ":" + API_PORT;
         } else {
-            return API_PROTOCOL + "melon.qicp.vip" + ":" + API_PORT;
+            LogUtil.d("server is not empty");
+            return API_PROTOCOL + server;
         }
     }
 }

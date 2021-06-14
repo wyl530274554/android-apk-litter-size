@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.melon.android.CommonFragmentActivity;
+import com.melon.android.MelonApplication;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -366,5 +367,12 @@ public class CommonUtil {
         if (downloadManager != null) {
             downloadManager.enqueue(request);
         }
+    }
+
+    /**
+     * 全局上下文
+     */
+    public static Context getAppContext(){
+        return MelonApplication.appContext;
     }
 }

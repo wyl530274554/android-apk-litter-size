@@ -18,11 +18,13 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.melon.android.tool.ApiUtil;
 import com.melon.android.tool.CommonUtil;
 import com.melon.android.tool.Constant;
 import com.melon.android.tool.HttpUtil;
 import com.melon.android.tool.LogUtil;
 import com.melon.android.tool.MelonConfig;
+import com.melon.android.tool.SpUtil;
 import com.melon.android.tool.SystemUtil;
 import com.melon.android.tool.ToastUtil;
 
@@ -36,11 +38,12 @@ import static com.melon.android.tool.ApiUtil.APP_DOWNLOAD;
 
 public class MainActivity extends Activity implements TextView.OnEditorActionListener, AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private final String[] mTitles = {"密码", "天气", "上海南站", "车墩站"};
+    private final String[] mTitles = {"密码", "天气", "上海南站", "车墩站", "聊天", "笔记", "电话本"};
     private static final int ITEM_PASSWORD = 0;
     private static final int ITEM_WEATHER = 1;
     private static final int ITEM_SHNZ = 2; //金山铁路-上海南站
     private static final int ITEM_CHEDUN = 3; //金山铁路-车墩站
+    private static final int ITEM_TALK = 4; //金山铁路-车墩站
     private EditText editText;
     private CheckBox cb_main_explorer;
 
@@ -106,6 +109,14 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
     }
 
     private void enterSearch(String content) {
+        //服务器地址设置ip:port
+        if (content.startsWith("ip://")) {
+            String[] split = content.split("//");
+            SpUtil.setString(this, "myServer", split[1]);
+            ToastUtil.toast(this, "OK");
+            return;
+        }
+
         String url;
         if (content.startsWith("http")) {
             url = content;
@@ -142,6 +153,7 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                editText.requestFocus();
                 CommonUtil.hideInputMode(MainActivity.this, false);
             }
         }, 500);
@@ -172,6 +184,10 @@ public class MainActivity extends Activity implements TextView.OnEditorActionLis
             case ITEM_CHEDUN:
                 //查询金山铁路-车墩站
                 CommonUtil.enterBrowser(this, "http://www.shjstl.com/lately.php?station=%E8%BD%A6%E5%A2%A9");
+                break;
+            case ITEM_TALK:
+                //聊天
+                CommonUtil.enterBrowser(this, "http://"+ ApiUtil.API_IP +"/topic");
                 break;
             default:
         }

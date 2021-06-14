@@ -5,7 +5,6 @@
     android:orientation="vertical">
 
     <EditText
-        android:selectAllOnFocus="true"
         android:id="@+id/et_main_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,6 +12,7 @@
         android:hint="@string/text_search_tip"
         android:imeOptions="actionSearch"
         android:inputType="text"
+        android:selectAllOnFocus="true"
         android:singleLine="true" />
 
     <LinearLayout

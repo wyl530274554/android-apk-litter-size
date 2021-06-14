@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.melon.android.MainActivity;
+import com.melon.android.MelonApplication;
 import com.melon.android.R;
 import com.melon.android.bean.Password;
 import com.melon.android.tool.ApiUtil;
@@ -222,6 +223,7 @@ public class PasswordFragment extends Fragment implements AdapterView.OnItemClic
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                et_pwd_search.requestFocus();
                 CommonUtil.hideInputMode(getActivity(), false);
             }
         }, 500);
@@ -408,7 +410,9 @@ public class PasswordFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     private void getPassword(String content) {
-        HttpUtil.doGet(getContext(), ApiUtil.API_PASSWORD + content, new HttpUtil.HttpCallbackStringListener() {
+        String url = ApiUtil.API_PASSWORD + content;
+        LogUtil.d("url: " + url);
+        HttpUtil.doGet(getContext(), url, new HttpUtil.HttpCallbackStringListener() {
             @Override
             public void onFinish(String response) {
                 try {
@@ -428,15 +432,19 @@ public class PasswordFragment extends Fragment implements AdapterView.OnItemClic
                     if (passwords.size() > 0) {
                         // 获取本地并显示
                         initDataShow(passwords);
+                    } else {
+                        ToastUtil.showSubThreadLongToast(getActivity(), "没有记录");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    ToastUtil.showSubThreadLongToast(getActivity(), "Json异常");
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                showToast("get notes error: " + e.getMessage());
+                ToastUtil.showSubThreadLongToast(getActivity(), "获取密码错误:" + e.getMessage());
+                LogUtil.e("getPassword error: " + e.getMessage());
             }
         });
     }
